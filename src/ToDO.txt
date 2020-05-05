@@ -1,0 +1,13 @@
+TODO:
+
+Step1:
+Set attribut to table that how many can sit at the table.
+
+set the correct text after booking and debooking.
+
+Step 2:
+
+Implement information showcase.
+
+step 3:
+Implement reservation with time and date.

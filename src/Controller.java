@@ -11,12 +11,10 @@ public class Controller extends WindowAdapter implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String switchButton = e.getActionCommand();
-		switch(switchButton) {
-		case "w0": 
-			//model.test();
-			break;
-		}
+		model.test(e.getActionCommand());
+		
+		
+		
 		
 	}
 	
