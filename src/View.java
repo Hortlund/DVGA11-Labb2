@@ -145,7 +145,7 @@ public class View extends JFrame implements Observer {
 		return res;
 	}
 	
-	private int reserveTable() {
+	private int reserveTable(Object table) {
 		JTextField nameField = new JTextField();
 		JComboBox years = new JComboBox();
 		JComboBox months = new JComboBox();
@@ -192,7 +192,7 @@ public class View extends JFrame implements Observer {
 		
 		months.setSelectedIndex(LocalDateTime.now().getMonthValue()-1);
 		days.setSelectedIndex(LocalDateTime.now().getDayOfMonth()-1);
-		timeBox.setSelectedIndex(LocalDateTime.now().getHour());
+		timeBox.setSelectedIndex(LocalDateTime.now().getHour()+1);
 		panel.add(name);
 		panel.add(nameField);
 		panel.add(year);
@@ -210,12 +210,13 @@ public class View extends JFrame implements Observer {
 			if(nameField.getText() == null || nameField.getText().trim().isEmpty()) {
 				JOptionPane.showMessageDialog(this, "Ett namn måste anges vid reservation!");
 				
-				reserveTable();
+				reserveTable(table);
 				//this.dispose();
 			}else {
 				//System.out.println(years.getSelectedItem() + "-" + months.getSelectedItem() + "-" + days.getSelectedItem() + " " + timeBox.getSelectedItem() + " " + nameField.getText());
 				String[]b = {years.getSelectedItem() + "-" + months.getSelectedItem() + "-" + days.getSelectedItem() + " " + timeBox.getSelectedItem(),nameField.getText()};
 				setReservationValue(b);
+				JOptionPane.showMessageDialog(this, "Bord " + table  + " är nu reserverat!");
 				return 1;
 			}
 			
@@ -239,7 +240,6 @@ public class View extends JFrame implements Observer {
 		}
 		panel.add(status);
 		int result = JOptionPane.showConfirmDialog(this, panel, "Information",JOptionPane.OK_CANCEL_OPTION);
-		System.out.println(result);
 
 	}
 	
@@ -277,8 +277,7 @@ public class View extends JFrame implements Observer {
 		} else if(result == 1) {
 			showTableInfo(table, reserved, bookedDate, bookedname);
 		}else if(result == 2) {
-			System.out.println(result);
-			return reserveTable();
+			return reserveTable(table);
 		}
 		
 		return 0;
@@ -318,7 +317,9 @@ public class View extends JFrame implements Observer {
 				}
 			}else if(ye == 1) {
 				
-				model.reserve(returnReservationValue());
+				if(!model.reserve(returnReservationValue())) {
+					JOptionPane.showMessageDialog(this, "<html>Datumet är i det förflutna, Välj ett annat</html>");
+				}
 				if(model.getReserved()) {
 					tables[i-1].setText("<html><strong>Bord " + t + " <br>reserverat!</strong><html>");
 				}

@@ -1,3 +1,6 @@
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Observable;
 
@@ -24,7 +27,6 @@ public class Model extends Observable {
 		
 		currentTable = tables[Integer.parseInt(table.substring(4))];
 		btnTable = Integer.parseInt(table.substring(4));
-		System.out.println(table);
 		setChanged();
 		notifyObservers();
 	}
@@ -65,12 +67,21 @@ public class Model extends Observable {
 		return currentTable.reserved;
 	}
 	
-	public void reserve(String[]b) {
-		currentTable.reserved = true;
-		currentTable.name = b[1];
-		currentTable.date = b[0];
+	public boolean reserve(String[]b) {
+		//LocalDateTime.parse(b[0], formatter)
+		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		String[] dateTime = b[0].split("-|\\s+|:");
 		
-		System.out.println(b[0]);
+		LocalDateTime current = LocalDateTime.of(Integer.parseInt(dateTime[0]), Month.valueOf(dateTime[1]), Integer.parseInt(dateTime[2]), Integer.parseInt(dateTime[3]), Integer.parseInt(dateTime[4]));
+		
+		if(current.isAfter(LocalDateTime.now())) {
+			currentTable.reserved = true;
+			currentTable.name = b[1];
+			currentTable.date = b[0];
+			return true;
+		}
+		
+		return false;
 	}
 	
 	public void dereserve() {
